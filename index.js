@@ -58,9 +58,12 @@ productsRouter.put('/:id', async (req, res)=>{
 
   products[productIndex].title = body.title
   products[productIndex].price = body.price
-  products[productIndex].thumbnail = body.thumbnail
-
-  await contenedor.save(products[productIndex])
+  products[productIndex].thumbnail = body.thumbnail 
+  
+  //cree esta funcion en contenedor.js para actualizar y no perder los id
+  await contenedor.update(products[productIndex])
+    
+  return res.json(products)
 })
 
 productsRouter.delete('/:id', async (req,res)=>{
@@ -71,6 +74,7 @@ productsRouter.delete('/:id', async (req,res)=>{
   return res.status(404).json({error: 'Producto no encontrado'})
   }
   await contenedor.deleteById(id)
+  return res.json(product)
 })
 
 

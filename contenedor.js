@@ -31,6 +31,24 @@ class Contenedor{
         return fs.promises.writeFile(`./${this.nombreArchivo}`, JSON.stringify(data, null, 2)) //save del producto nuevo
 
   }
+    async update(object){
+
+        let objects = await this.getAll()
+        let index = object.id -1
+        objects.splice(index ,1,object)
+        
+        await this.deleteAll()
+        for(let i = 0; i < objects.length; i++ ){
+            let obj = {
+                "title":objects[i].title,
+                "price":objects[i].price,
+                "thumbnail":objects[i].thumbnail
+            }
+            await this.save(obj)
+        }
+       
+     
+    }
 
     async getById(id){
         let data
@@ -60,7 +78,7 @@ class Contenedor{
             data = JSON.parse(data)
                 
             }catch(err){data = []}
-        const newList = data.find(prod => prod.id !== id)
+        const newList = data.filter(prod => prod.id !== id)
         return fs.promises.writeFile(`./${this.nombreArchivo}`,JSON.stringify(newList, null, 2))
     }
 
